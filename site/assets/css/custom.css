@@ -1,0 +1,4 @@
+/* The layout prints the page title as a heading before the content. */
+.content > div:has(> h1) ~ h1 {
+  display: none;
+}

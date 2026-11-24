@@ -1,24 +1,5 @@
 ---
 title: Documentation
-cascade:
-  - target:
-      path: "/docs/cli"
-    weight: 10
-  - target:
-      path: "/docs/recipes"
-    weight: 20
-  - target:
-      path: "/docs/architecture"
-    weight: 30
-  - target:
-      path: "/docs/control-protocol"
-    weight: 40
-  - target:
-      path: "/docs/systrap-windows"
-    weight: 50
-  - target:
-      path: "/docs/moonshots"
-    weight: 60
 ---
 `gvx` runs unmodified Linux containers and binaries on Windows, macOS, and Linux. The table lists each document and its scope.
 

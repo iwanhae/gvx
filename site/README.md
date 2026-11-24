@@ -6,10 +6,11 @@ The site publishes `README.md`, `SECURITY.md`, and `docs/` from the repository r
 
 | Path | Role |
 | :--- | :--- |
-| `hugo.yaml` | Mounts the published files and sets the menu. |
+| `hugo.yaml` | Mounts the published files, sets their titles and order, and sets the menu. |
 | `hugo.version` | Pins the Hugo version. |
 | `go.mod`, `go.sum` | Pin the theme version. |
-| `content/docs/_index.md` | Lists the documents and sets the order of the sidebar. |
+| `content/docs/_index.md` | Lists the documents. |
+| `assets/css/custom.css` | Hides the title heading inside each mounted file. |
 | `layouts/_partials/gvx/resolve.html` | Maps each Markdown link to a page, an asset, or a repository file. |
 | `layouts/_markup/` | Applies the resolver to links and images. |
 | `public/` | Build output. Git ignores it. |

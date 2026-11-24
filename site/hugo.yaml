@@ -5,6 +5,41 @@ disableKinds:
   - taxonomy
   - term
 
+# The mounted files have no front matter, so the site sets their titles and order here.
+cascade:
+  - target:
+      path: "/docs/cli"
+    title: CLI reference
+    weight: 10
+  - target:
+      path: "/docs/recipes"
+    weight: 20
+  - target:
+      path: "/docs/recipes/docker-engine"
+    title: Docker Engine recipe
+  - target:
+      path: "/docs/recipes/kubernetes"
+    title: Kubernetes recipe
+  - target:
+      path: "/docs/architecture"
+    title: Architecture
+    weight: 30
+  - target:
+      path: "/docs/control-protocol"
+    title: Control protocol
+    weight: 40
+  - target:
+      path: "/docs/systrap-windows"
+    title: Windows systrap
+    weight: 50
+  - target:
+      path: "/docs/moonshots"
+    title: Moonshots
+    weight: 60
+  - target:
+      path: "/security"
+    title: Security policy
+
 module:
   # The proxy verifies each download against go.sum.
   proxy: https://proxy.golang.org
@@ -19,6 +54,8 @@ module:
       files:
         - "*.md"
         - "**/*.md"
+    - source: assets
+      target: assets
     - source: ../docs/assets
       target: assets/docs/assets
     - source: ../README.md
