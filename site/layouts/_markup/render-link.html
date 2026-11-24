@@ -1,0 +1,3 @@
+{{- /* Hextra keeps a destination that names no page. This hook fails the build for that case. */ -}}
+{{- $target := partial "gvx/resolve.html" (dict "page" .PageInner "destination" .Destination "position" .Position) -}}
+<a href="{{ $target.href | safeURL }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ if $target.external }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

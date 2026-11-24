@@ -1,0 +1,65 @@
+baseURL: https://gfire-sigs.github.io/gvx/
+title: gvx
+defaultContentLanguage: en
+disableKinds:
+  - taxonomy
+  - term
+
+module:
+  # The proxy verifies each download against go.sum.
+  proxy: https://proxy.golang.org
+  imports:
+    - path: github.com/imfing/hextra
+  mounts:
+    - source: content
+      target: content
+    # "**/*.md" omits the files at the root of the mount.
+    - source: ../docs
+      target: content/docs
+      files:
+        - "*.md"
+        - "**/*.md"
+    - source: ../docs/assets
+      target: assets/docs/assets
+    - source: ../README.md
+      target: content/_index.md
+    - source: ../SECURITY.md
+      target: content/SECURITY.md
+
+markup:
+  highlight:
+    noClasses: false
+
+params:
+  navbar:
+    displayLogo: false
+  page:
+    width: wide
+  imageZoom:
+    enable: true
+  repo: https://github.com/gfire-sigs/gvx
+  repoRef: main
+  repoOnlyMarkdown:
+    - AGENTS.md
+    - CHANGELOG.md
+  search:
+    enable: true
+    type: flexsearch
+
+menu:
+  main:
+    - name: Docs
+      pageRef: /docs
+      weight: 10
+    - name: CLI
+      pageRef: /docs/cli
+      weight: 20
+    - name: Search
+      weight: 30
+      params:
+        type: search
+    - name: GitHub
+      url: https://github.com/gfire-sigs/gvx
+      weight: 40
+      params:
+        icon: github

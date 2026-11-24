@@ -1,0 +1,11 @@
+{{- $target := partial "gvx/resolve.html" (dict "page" .PageInner "destination" .Destination "position" .Position) -}}
+{{- if ne $target.kind "asset" -}}
+  {{- errorf "site: image %q names no published asset; see %s" .Destination .Position -}}
+{{- end -}}
+{{- $attributes := "" -}}
+{{- range $key, $value := .Attributes -}}
+  {{- with $value }}{{ $attributes = printf `%s %s=%q` $attributes $key ($value | transform.HTMLEscape) }}{{ end -}}
+{{- end -}}
+{{- $zoom := site.Params.imageZoom.enable | default false -}}
+{{- if $zoom }}{{ .Page.Store.Set "hasImageZoom" true }}{{ end -}}
+<img src="{{ $target.href | safeURL }}" alt="{{ .PlainText }}"{{ with .Title }} title="{{ . }}"{{ end }}{{ $attributes | safeHTMLAttr }}{{ if $zoom }} data-zoomable{{ end }} loading="lazy" />

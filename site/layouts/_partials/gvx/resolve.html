@@ -1,0 +1,52 @@
+{{- /*
+Maps a Markdown destination to a URL. A relative destination is a path in
+the source tree, so it selects a published page or asset before it falls
+back to the repository file.
+*/ -}}
+{{- $page := .page -}}
+{{- $u := urls.Parse .destination -}}
+{{- $href := $u.String -}}
+{{- $kind := cond $u.IsAbs "external" "literal" -}}
+{{- $trailer := "" -}}
+{{- with $u.RawQuery }}{{ $trailer = printf "?%s" . }}{{ end -}}
+{{- with $u.Fragment }}{{ $trailer = printf "%s#%s" $trailer . }}{{ end -}}
+{{- if and (not $u.IsAbs) $u.Path -}}
+  {{- $key := cond (hasPrefix $u.Path "/") $u.Path (path.Join $page.File.Dir (strings.TrimPrefix "./" $u.Path)) -}}
+  {{- $key = strings.TrimSuffix "/" (strings.TrimPrefix "/" $key) -}}
+  {{- if hasPrefix $key "../" -}}
+    {{- errorf "site: link %q is outside the repository; see %s" .destination .position -}}
+  {{- end -}}
+  {{- $target := false -}}
+  {{- if or (eq $key "") (eq $key "README.md") -}}
+    {{- $target = site.Home -}}
+  {{- else -}}
+    {{- $pages := where site.Pages "File.Path" $key -}}
+    {{- /* A directory link selects the page that Hugo mounts from its _index.md. */ -}}
+    {{- if not $pages }}{{ $pages = where site.Pages "File.Path" (printf "%s/_index.md" $key) }}{{ end -}}
+    {{- with $pages }}{{ $target = index . 0 }}{{ end -}}
+  {{- end -}}
+  {{- with $target -}}
+    {{- with $u.Fragment -}}
+      {{- if not (in $target.Fragments.Identifiers .) -}}
+        {{- errorf "site: link %q names no heading of %s; see %s" $.destination $key $.position -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $href = printf "%s%s" $target.RelPermalink $trailer -}}
+    {{- $kind = "page" -}}
+  {{- else -}}
+    {{- with resources.Get $key -}}
+      {{- $href = printf "%s%s" .RelPermalink $trailer -}}
+      {{- $kind = "asset" -}}
+    {{- else -}}
+      {{- if and (hasSuffix $key ".md") (not (in site.Params.repoOnlyMarkdown $key)) -}}
+        {{- errorf "site: link %q names no published page; see %s" .destination .position -}}
+      {{- end -}}
+      {{- $href = printf "%s/blob/%s/%s%s" site.Params.repo site.Params.repoRef $key $trailer -}}
+      {{- $kind = "repo" -}}
+    {{- end -}}
+  {{- end -}}
+{{- else if strings.HasPrefix $u.String "#" -}}
+  {{- $href = printf "%s%s" $page.RelPermalink $u.String -}}
+  {{- $kind = "self" -}}
+{{- end -}}
+{{- return dict "href" $href "kind" $kind "external" (eq $kind "external") -}}
